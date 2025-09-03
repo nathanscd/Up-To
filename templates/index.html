@@ -1,25 +1,152 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Up-TO</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  </head>
-  <body>
-    <h1>Eventos próximos</h1>
-    <div id="map" style="height: 500px"></div>
-    <script>
-      var map = L.map('map').setView([-23.55, -46.63], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-      }).addTo(map);
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Up To</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .icon {
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+        .icon:hover {
+            filter: grayscale(0%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
 
-      {% for e in events %}
-        L.marker([{{ e.latitude }}, {{ e.longitude }}])
-          .addTo(map)
-          .bindPopup("{{ e.title }} - {{ e.activity.name }}<br>{{ e.start_time }}");
-      {% endfor %}
-    </script>
-    <a href="{{ url_for('create_event') }}">Criar novo evento</a>
-  </body>
+    <!-- Header do App -->
+    <div class="flex-shrink-0 flex items-center justify-center p-8 bg-white">
+        <!-- Logo simulada -->
+        <div class="relative w-48 h-12 flex items-center justify-center">
+            <svg class="absolute w-full h-full" viewBox="0 0 100 50">
+                <path d="M5 45 Q50 5, 95 45" stroke="black" stroke-width="2" fill="none" />
+            </svg>
+            <span class="relative z-10 font-medium text-lg text-black">up to</span>
+        </div>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-white rounded-3xl shadow-lg p-6">
+            <!-- Barra de Pesquisa -->
+            <div class="mb-6">
+                <input type="text" placeholder="O que será hoje?" class="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" />
+            </div>
+
+            <!-- Seção de Favoritos -->
+            <section class="mb-6">
+                <h2 class="text-gray-600 font-semibold text-lg mb-4">SEUS FAVORITOS</h2>
+                <div class="grid grid-cols-4 gap-4">
+                    <!-- Item Favorito - Café -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://placehold.co/64x64/E2E8F0/A0A0A0?text=Café" alt="Café" class="w-full h-full object-cover rounded-xl icon">
+                        </div>
+                        <span class="mt-2 text-sm text-gray-700">Café</span>
+                    </div>
+                    <!-- Item Favorito - Tacos -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://placehold.co/64x64/E2E8F0/A0A0A0?text=Tacos" alt="Tacos" class="w-full h-full object-cover rounded-xl icon">
+                        </div>
+                        <span class="mt-2 text-sm text-gray-700">Tacos</span>
+                    </div>
+                    <!-- Item Favorito - Panquecas -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://placehold.co/64x64/E2E8F0/A0A0A0?text=Pancakes" alt="Panquecas" class="w-full h-full object-cover rounded-xl icon">
+                        </div>
+                        <span class="mt-2 text-sm text-gray-700">Panquecas</span>
+                    </div>
+                    <!-- Item Favorito - Sushi -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://placehold.co/64x64/E2E8F0/A0A0A0?text=Sushi" alt="Sushi" class="w-full h-full object-cover rounded-xl icon">
+                        </div>
+                        <span class="mt-2 text-sm text-gray-700">Sushi</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Recomendações -->
+            <section>
+                <h2 class="text-gray-600 font-semibold text-lg mb-4">NOSSAS RECOMENDAÇÕES</h2>
+                <div class="grid grid-cols-4 gap-4">
+                    <!-- Item Recomendado - Ramen -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://placehold.co/64x64/E2E8F0/A0A0A0?text=Ramen" alt="Ramen" class="w-full h-full object-cover rounded-xl icon">
+                        </div>
+                        <span class="mt-2 text-sm text-gray-700">Ramen</span>
+                    </div>
+                    <!-- Item Recomendado - Salada -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://placehold.co/64x64/E2E8F0/A0A0A0?text=Salad" alt="Salada" class="w-full h-full object-cover rounded-xl icon">
+                        </div>
+                        <span class="mt-2 text-sm text-gray-700">Salada</span>
+                    </div>
+                    <!-- Item Recomendado - Pizza -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://placehold.co/64x64/E2E8F0/A0A0A0?text=Pizza" alt="Pizza" class="w-full h-full object-cover rounded-xl icon">
+                        </div>
+                        <span class="mt-2 text-sm text-gray-700">Pizza</span>
+                    </div>
+                    <!-- Item Recomendado - Cerveja -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://placehold.co/64x64/E2E8F0/A0A0A0?text=Beer" alt="Cerveja" class="w-full h-full object-cover rounded-xl icon">
+                        </div>
+                        <span class="mt-2 text-sm text-gray-700">Cerveja</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Barra de navegação inferior -->
+    <nav class="flex-shrink-0 bg-white p-4 shadow-top rounded-t-3xl border-t border-gray-200">
+        <ul class="flex justify-around text-gray-600 font-medium">
+            <li><a href="#" class="flex flex-col items-center text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+                <span class="text-xs mt-1">MENU</span>
+            </a></li>
+            <li><a href="#" class="flex flex-col items-center hover:text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.082 2.659l-4.225 3.513c-.604.502-1.385.753-2.167.753H3.25c-.776 0-1.405.629-1.405 1.405v10.421c0 .776.629 1.405 1.405 1.405h2.434c.782 0 1.563.251 2.167.753l4.225 3.513c.636.529 1.503.456 2.05-.181L19.46 16.5c.547-.637.474-1.504-.163-2.05l-4.225-3.513c-.604-.502-1.385-.753-2.167-.753h-2.434c-.776 0-1.405-.629-1.405-1.405V4.064c0-.776.629-1.405 1.405-1.405h2.434c.782 0 1.563-.251 2.167-.753l4.225-3.513c.636-.529 1.503-.456 2.05.181l4.007 4.63c.547.637.474 1.504-.163 2.05l-4.225 3.513c-.604.502-1.385.753-2.167.753h-2.434c-.776 0-1.405-.629-1.405-1.405V4.064c0-.776.629-1.405 1.405-1.405h2.434z" />
+                </svg>
+                <span class="text-xs mt-1">FAVORITOS</span>
+            </a></li>
+            <li><a href="#" class="flex flex-col items-center hover:text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+                <span class="text-xs mt-1">MAPA</span>
+            </a></li>
+            <li><a href="#" class="flex flex-col items-center hover:text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4c1.1 0 2-.9 2-2s-.9-2-2-2zm-6.66-.5a.5.5 0 0 1 .5-.5h5.33a.5.5 0 0 1 .5.5c0 1.94-2.16 3.5-4 3.5s-4-1.56-4-3.5z" />
+                </svg>
+                <span class="text-xs mt-1">AMIGOS</span>
+            </a></li>
+            <li><a href="#" class="flex flex-col items-center hover:text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+                <span class="text-xs mt-1">PERFIL</span>
+            </a></li>
+        </ul>
+    </nav>
+</body>
 </html>
