@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Up-TO</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <h1>Eventos próximos</h1>
+    <div id="map" style="height: 500px"></div>
+    <script>
+      var map = L.map('map').setView([-23.55, -46.63], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+
+      {% for e in events %}
+        L.marker([{{ e.latitude }}, {{ e.longitude }}])
+          .addTo(map)
+          .bindPopup("{{ e.title }} - {{ e.activity.name }}<br>{{ e.start_time }}");
+      {% endfor %}
+    </script>
+    <a href="{{ url_for('create_event') }}">Criar novo evento</a>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Criar Evento</title></head>
+<body>
+  <h1>Novo Evento</h1>
+  <form method="post">
+    <label>Título:</label><input type="text" name="title"><br>
+    <label>Atividade:</label>
+    <select name="activity">
+      {% for a in activities %}
+        <option value="{{ a.id }}">{{ a.name }}</option>
+      {% endfor %}
+    </select><br>
+    <label>Latitude:</label><input type="text" name="latitude"><br>
+    <label>Longitude:</label><input type="text" name="longitude"><br>
+    <label>Início:</label><input type="datetime-local" name="start_time"><br>
+    <label>Fim:</label><input type="datetime-local" name="end_time"><br>
+    <button type="submit">Criar</button>
+  </form>
+</body>
+</html>
